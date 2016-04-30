@@ -65,10 +65,10 @@
 <entry id="8389125" method="true" symbol="onHide"/>
 </symbolTable>
 <localVars>
-<entry endPc="268436363" name="rez_cmp_local_label_GZM8YG74F0_fontHeight" stackId="4" startPc="268435975"/>
-<entry endPc="268436363" name="rez_cmp_local_label_GZM8YG74F0_font" stackId="2" startPc="268435975"/>
+<entry endPc="268436363" name="rez_cmp_local_label_04PWF40S57_fontHeight" stackId="4" startPc="268435975"/>
+<entry endPc="268436363" name="rez_cmp_local_label_04PWF40S57_font" stackId="2" startPc="268435975"/>
+<entry endPc="268436363" name="rez_cmp_local_label_04PWF40S57" stackId="3" startPc="268435975"/>
 <entry endPc="268436363" name="rez_cmp_local_bitmap_id_monkey" stackId="5" startPc="268435975"/>
-<entry endPc="268436363" name="rez_cmp_local_label_GZM8YG74F0" stackId="3" startPc="268435975"/>
 </localVars>
 <annotations/>
 <functions>
