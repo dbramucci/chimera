@@ -48,7 +48,7 @@ def get_data():
             phone_num = int(request.args['num'])
             lat = float(post_data['lat'])
             long = float(post_data['long'])
-            print(name, phone_num, lat, long)
+            # print(name, phone_num, lat, long)
             group[phone_num] = Person(name, phone_num)
             group[phone_num].coordinates = lat, long
         except (ValueError, RuntimeError):
