@@ -1,5 +1,11 @@
+from flask import Flask, request
 from person import Person
+from test import make_test_case
 
+app = Flask(__name__)
+
+GROUP_RADIUS = 100
+group = {}
 
 def group_center(group: set) -> tuple:
     center = [0, 0]
@@ -10,31 +16,39 @@ def group_center(group: set) -> tuple:
     center[1] /= len(group)
     return tuple(center)
 
-test = [Person("bob", 123),
-        Person("Alice", 234),
-        Person("Smith", 1632),
-        Person("John", 1765),
-        Person("Zangeef", 697),
-        Person("Zanleef", 697)]
-test[0].coordinates = (39.192511, -96.581802)
-test[1].coordinates = (39.192511, -96.58180)
-test[2].coordinates = (39.19251, -96.581802)
-test[3].coordinates = (39.192511, -96.581302)
-test[4].coordinates = (38.122511, -96.581802)
-test[5].coordinates = (38.122511, -96.571802)
-group = test
-lost_people = set()
 
-for i in group:
-    i_am_lost = True
-    for j in (set(group) - {i}):
-        if i @ group_center(set(group) - {j}) < 100:
-            i_am_lost = False
-            if i.name == "Zangeef":
-                print("Distance = {}".format(i @ group_center(set(group) - {i})))
-                print("Person" + str(i))
-    if i_am_lost:
-        lost_people.add(i)
-for i in lost_people:
-    print(i)
+def find_lost_people(list_of_group_members: list) -> set:
+    lost_people = set()
+    for person_lost in list_of_group_members:
+        i_am_lost = True
+        for partner in (set(list_of_group_members) - {person_lost}):
+            if person_lost @ group_center(set(list_of_group_members) - {partner}
+                                          ) < GROUP_RADIUS:
+                i_am_lost = False
+        if i_am_lost:
+            lost_people.add(person_lost)
+    return lost_people
+
+@app.route("/", methods=['GET', 'POST'])
+def get_data():
+    if request.method == 'POST':
+        try:
+            name, phone_num, lat, long = str(request.data).split(':')
+            lat, long = float(lat), float(long[:-1])
+            print(name, phone_num, lat, long)
+            group[phone_num] = Person(name[2:], phone_num)
+            group[phone_num].coordinates = lat, long
+        except (ValueError, RuntimeError):
+            return "Invalid data"
+        main()
+        return "Message received"
+
+def main():
+    # group = make_test_case()
+    lost_people = find_lost_people(group)
+    for i in group.values():
+        print(i)
+
+if __name__ == "__main__":
+    app.run(debug=True)
 
