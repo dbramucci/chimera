@@ -1,4 +1,4 @@
-package chimeraandroid.chimeraandroid;
+package chimera.chimeracoordinatedisplay;
 
 import org.junit.Test;
 
