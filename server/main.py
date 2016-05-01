@@ -64,6 +64,7 @@ def find_lost_people(list_of_group_members: list) -> set:
 def get_data():
     if request.method == 'PUT':
         group = {}
+        return "Data reset"
     if (request.method == 'POST') or (request.method == 'GET'):
         try:
             print(request.args)
