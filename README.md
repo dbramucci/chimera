@@ -1,2 +1,2 @@
 # chimera
-This is a chimera webpage generator.
+This is an app that helps people stick together.

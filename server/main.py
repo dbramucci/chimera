@@ -19,12 +19,22 @@ app = Flask(__name__)
 
 GROUP_RADIUS = 100
 group = {}
+last_lost_group = set()
 
 
 def send_lost_message(phone_number, lost_person_name):
-    message = client.messages.create(to=to_phone, from_=twilio_phone,
+    message = client.messages.create(to=phone_number, from_=twilio_phone,
                                      body="{} is being left behind!".format(
                                          lost_person_name))
+    print("Sent Message: \nto: {}\n'{} is being left behind!'".format(
+        phone_number, lost_person_name))
+
+
+def send_left_behind_message(phone_number):
+    message = client.messages.create(to=phone_number, from_=twilio_phone,
+                                     body="You have been left behind.")
+    print("Sent Message: \nto: {}\n'You have been left behind.'".format(
+        phone_number))
 
 
 def group_center(group: set) -> tuple:
@@ -52,8 +62,9 @@ def find_lost_people(list_of_group_members: list) -> set:
 
 @app.route("/", methods=['GET', 'POST'])
 def get_data():
-    if request.method == 'POST':
+    if (request.method == 'POST') or (request.method == 'GET'):
         try:
+            print(request.args)
             post_data = request.args
             name = request.args['name']
             phone_num = int(request.args['num'])
@@ -74,8 +85,11 @@ def main():
     for i in lost_people:
         if len(group) > 1:
             print(i)
-            send_lost_message(i.phone_number, i.name)
+            for j in (set(group.values()) - {i}):
+                send_lost_message(j.phone_number, i.name)
+            send_left_behind_message(i.phone_number)
+            # last_lost_group = lost_people
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0')
