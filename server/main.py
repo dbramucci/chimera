@@ -1,10 +1,18 @@
 from flask import Flask, request
 from person import Person
-from test import make_test_case
 from twilio.rest import TwilioRestClient
 
-account_sid = ""
-auth_token = ""
+account_sid = str
+auth_token = str
+to_phone = int
+twilio_phone = int
+with open("private_data.txt", 'r') as file:
+    lines = list(file)
+    account_sid = lines[0].rstrip()
+    auth_token = lines[1].rstrip()
+    twilio_phone = int(lines[2].rstrip())
+    to_phone = int(lines[3].rstrip())
+
 client = TwilioRestClient(account_sid, auth_token)
 
 app = Flask(__name__)
@@ -12,9 +20,12 @@ app = Flask(__name__)
 GROUP_RADIUS = 100
 group = {}
 
+
 def send_lost_message(phone_number, lost_person_name):
-    message = client.messages.create(to=0, from_=0,
-                                     body="{} is being left behind!".format(lost_person_name))
+    message = client.messages.create(to=to_phone, from_=twilio_phone,
+                                     body="{} is being left behind!".format(
+                                         lost_person_name))
+
 
 def group_center(group: set) -> tuple:
     center = [0, 0]
@@ -48,7 +59,7 @@ def get_data():
             phone_num = int(request.args['num'])
             lat = float(post_data['lat'])
             long = float(post_data['long'])
-            # print(name, phone_num, lat, long)
+            print(name, phone_num, lat, long)
             group[phone_num] = Person(name, phone_num)
             group[phone_num].coordinates = lat, long
         except (ValueError, RuntimeError):
