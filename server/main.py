@@ -17,7 +17,7 @@ client = TwilioRestClient(account_sid, auth_token)
 
 app = Flask(__name__)
 
-GROUP_RADIUS = 100
+GROUP_RADIUS = 5
 group = {}
 last_lost_group = set()
 
@@ -60,8 +60,10 @@ def find_lost_people(list_of_group_members: list) -> set:
     return lost_people
 
 
-@app.route("/", methods=['GET', 'POST'])
+@app.route("/", methods=['GET', 'POST', 'PUT'])
 def get_data():
+    if request.method == 'PUT':
+        group = {}
     if (request.method == 'POST') or (request.method == 'GET'):
         try:
             print(request.args)
